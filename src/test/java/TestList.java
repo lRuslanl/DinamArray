@@ -100,6 +100,8 @@ public class TestList {
 
     @Test
     public  void test5sortDecrease(){
+        for (int i=0;i<500000;i++)
+            data[i]=new Random().nextInt(i+100);
         list = new MyList(data);
         Arrays.sort(data);
         int[] data2 = new int[data.length];
