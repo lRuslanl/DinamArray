@@ -1,23 +1,27 @@
-import java.util.Comparator;
+package netcracker.java.first;
 
-public class MyList {
-    private int array[];
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class MyList<T> implements Iterable<T> {
+    private T array[];
     private int size=0;
     private int realsize=5;
-    MyList(){
-        array = new int[realsize];
+    public MyList(){
+        array = (T[]) new Object[realsize];
     }
 
-    MyList(int el){
+    public MyList(T el){
         size++;
-        array=new int[realsize];
+        array = (T[]) new Object[realsize];
         array[size-1]=el;
     }
 
-    MyList (int mas[]){
+    public MyList (T mas[]){
         size=mas.length;
         realsize=size;
-        array=new int[size];
+        array = (T[]) new Object[size];
         for (int i=0;i<size;i++)
         array[i]=mas[i];
     }
@@ -25,10 +29,10 @@ public class MyList {
     private void resize(){
         if (size+1>realsize-1) {
             realsize = (size * 3) / 2 + 1;
-            int array1[] = new int[realsize];
+            T array1[] =(T[]) new Object[realsize];
             for (int i = 0; i < array.length; i++)
                 array1[i] = array[i];
-            array = new int[realsize];
+            array = (T[]) new Object[realsize];
             array = array1;
 
         }
@@ -38,18 +42,17 @@ public class MyList {
         return size;
     }
 
-    public int get(int index)
+    public T get(int index)
     {
         if (index<0||index>size-1) throw new IndexOutOfBoundsException("error in index");
         else return array[index];
     }
 
-    public void set(int index, int el){
+    public void set(int index, T el){
         array[index] = el;
     }
 
-    public void add(int el){
-
+    public void add(T el){
         resize();
         size++;
         array[size-1]=el;
@@ -62,7 +65,7 @@ public class MyList {
             array[i]=array[i+1];
     }
 
-    public void insert (int index, int el){
+    public void insert (int index, T el){
         if (index<0||index>size-1) throw new IndexOutOfBoundsException("eror in index");
 
         resize();
@@ -73,39 +76,18 @@ public class MyList {
 
     }
 
-    public void sortIncrease(){
-        quicksort(array,0,size-1, increase);
+    public void sort(Comparator comparator){
+        quicksort(array,0,size-1, comparator);
     }
 
-    public void sortDecrease(){
-        quicksort(array,0,size-1, decrease);
-    }
-
-
-
-
-    private Comparator increase =  new Comparator<Integer>() {
-        @Override
-        public int compare(Integer o1, Integer o2) {
-            return o1 - o2;
-        }
-    };
-
-    private Comparator decrease =  new Comparator<Integer>() {
-        @Override
-        public int compare(Integer o1, Integer o2) {
-            return o2 - o1;
-        }
-    };
-
-    private int partition (int[] array1, int start, int end, Comparator comparator)
+    private int partition (T[] array1, int start, int end, Comparator comparator)
     {
         int marker = start;
         for ( int i = start; i <= end; i++ )
         {
             if ( comparator.compare( array1[i],array1[end])<=0 )
             {
-                int temp = array1[marker]; // swap
+                T temp = array1[marker]; // swap
                 array1[marker] = array1[i];
                 array1[i] = temp;
                 marker += 1;
@@ -114,7 +96,7 @@ public class MyList {
         return marker - 1;
     }
 
-    private void quicksort (int[] array, int start, int end, Comparator comparator)
+    private void quicksort (T[] array, int start, int end, Comparator comparator)
     {
         if ( start >= end )
         {
@@ -125,8 +107,8 @@ public class MyList {
         quicksort (array, pivot+1, end,comparator);
     }
 
-    public int[] toArray(){
-        int[] array1= new int[size];
+    public T[] toArray(){
+        T[] array1= (T[]) new Object[size];
         for (int i=0;i<size;i++){
             array1[i]=array[i];
         }
@@ -145,5 +127,23 @@ public class MyList {
         return true;
     }
 
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            int i =0;
+            public boolean hasNext() {
+                return size!=i;
+            }
+            public T next() {
+                if (hasNext()){
+                    return get(i++);
+                }
+                else throw new NoSuchElementException("No elements"+size);
+            }
+            public void remove() {
+                delete(i);
+                //if (i>size) i--;
+            }
+        };
+    }
 
 }
