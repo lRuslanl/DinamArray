@@ -1,31 +1,47 @@
-# DinamArray
-Class, which make dinamic array of int
-
 @startuml
+interface Comparator{
+}
+Comparator <|-- IncreaseComparator
 
-class MyList {
-    private int array[];
+Comparator <|-- DecreaseComparator
+
+class MyList<T> {
+    private T array[];
     private int size=0;
     private int realsize=5;
-    MyList()
-    MyList(int el)
-    MyList (int mas[])
+    public MyList();
+
+    public MyList(T el);
+
+    public MyList (T mas[]);
+
     private void resize();
     public int getSize();
-    public int get(int index);
-    public void set(int index, int el);
-    public void add(int el);
+
+    public T get(int index);
+
+    public void set(int index, T el);
+    public void add(T el);
+
     public void delete(int index);
-    public void insert (int index, int el);
-    public void sortIncrease();
-    public void sortDecrease();
-    public static void main(String[] args);
-    private Comparator increase =  new Comparator<Integer>();
-    private Comparator decrease =  new Comparator<Integer>();
-    private int partition (int[] array1, int start, int end, Comparator comparator);
-    private void quicksort (int[] array, int start, int end, Comparator comparator);
+    public void insert (int index, T el);
+
+    public void sort(Comparator comparator);
+
+    private int partition (T[] array1, int start, int end, Comparator comparator);
+
+    private void quicksort (T[] array, int start, int end, Comparator comparator);
+
+    public T[] toArray();
+
     @Override
     public boolean equals (Object obj);
+
+    public Iterator<T> iterator();
+
 }
 
+interface Iterable{
+}
+Iterable <|-- MyList
 @enduml
